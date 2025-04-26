@@ -69,7 +69,7 @@ class Course:
         self.__enrolled_students.append(student)
         return True
     
-    def remove_student(self, student):
+    def drop_student(self, student):
         if student in self.__enrolled_students:
             self.__enrolled_students.remove(student)
             return True
@@ -145,25 +145,31 @@ def enrol_student(students, courses):
         print(f"Failure! Student \"{student.student_name}\" NOT enrolled in course \"{course.course_name}\".")
 
 def drop_course(students, courses):
-    while True:
+    course_found = False
+
+    while not course_found:
         course_name = input("Enter the name of the course to drop: ").strip()
         course = get_course(courses, course_name)
         if course:
-            break
-        print(f'"{course_name}" not found. Try again.')
+            course_found = True
+        else:
+            print(f'"{course_name}" not found. Try again.')
 
-    while True:
+    student_found = False
+
+    while not student_found:
         student_name = input("Enter the name of the student: ").strip()
         student = get_student(students, student_name)
         if student:
-            break
-        print(f'"{student_name}" not found. Try again.')
+            student_found = True
+        else:
+            print(f'"{student_name}" not found. Try again.')
 
     if course.course_name not in student.enrolled_courses:
         print(f'Failure! Student "{student.student_name}" NOT enrolled in "{course.course_name}".')
         return
 
-    if course.remove_student(student):
+    if course.drop_student(student):
         student.drop_course(course.course_name)
         print(f'Success! Student "{student.student_name}" dropped from course "{course.course_name}".')
     else:
